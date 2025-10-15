@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Laboratorio: Análisis de Éxito de Productos</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#111831; --ink:#e8eefc; --muted:#a8b3cf;
+      --accent:#79a6ff; --ok:#7bf1a8; --warn:#ffd479; --mono:#0c1224;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+      background:linear-gradient(180deg,#0b1020 0%,#0f1630 100%);
+      color:var(--ink); line-height:1.55;
+    }
+    .wrap{max-width:960px;margin:48px auto;padding:0 20px}
+    header{margin-bottom:28px}
+    h1{font-size:clamp(28px,3vw,40px);margin:0 0 10px}
+    h2{margin-top:36px;color:#cfe3ff}
+    p.lead{color:var(--muted);margin:0}
+    .card{
+      background:rgba(17,24,49,.8);
+      border:1px solid #1f2a4d; border-radius:16px; padding:20px; margin:18px 0;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    .note{border-left:4px solid var(--accent); padding-left:14px}
+    .warn{border-left:4px solid var(--warn); padding-left:14px}
+    code, pre{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      background:#0a1229; color:#e6f0ff; border:1px solid #1a2446;
+      border-radius:10px;
+    }
+    code{padding:.1em .35em}
+    pre{padding:14px; overflow:auto}
+    .btn{
+      display:inline-block; background:var(--accent); color:#07122b; text-decoration:none;
+      padding:12px 16px; border-radius:10px; font-weight:700; border:1px solid #9fbfff;
+      transition:transform .05s ease, box-shadow .15s ease;
+    }
+    .btn:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(121,166,255,.4)}
+    .grid{display:grid; gap:14px}
+    @media (min-width:720px){ .grid{grid-template-columns:1fr 1fr} }
+    table{width:100%;border-collapse:collapse;background:#0a1229;border:1px solid #1a2446;border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid #1a2446;text-align:left}
+    th{background:#0f1a3a;color:#dbe7ff}
+    tfoot td{font-weight:700}
+    .foot{margin:26px 0;color:var(--muted);font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Laboratorio: Análisis de Éxito de Productos</h1>
+      <p class="lead">Archivos · Arreglos · Recursión · Formato tabular en Java</p>
+    </header>
+
+    <section class="card">
+      <h2>Objetivo</h2>
+      <p>
+        Leer un archivo con datos de productos, calcular un <b>índice de éxito</b> para cada uno,
+        identificar <b>los dos mejores</b>, mostrar un <b>informe tabular</b>, y calcular el
+        <b>promedio general</b> usando <b>recursión</b>.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Descarga del archivo de datos</h2>
+      <p>Coloca <code>productos.txt</code> en el mismo directorio que tu programa (o cárgalo en JDoodle si usas STDIN).</p>
+      <p><a class="btn" href="productos.txt" download>⬇️ Descargar productos.txt</a></p>
+      <pre><code>EcoBottle,78,2.5,85
+SmartBrush,65,1.8,72
+SleepBand,82,3.1,88
+GlowSocks,71,1.6,69
+ChocoFit,90,2.9,93
+WaveSpeaker,88,4.1,92
+MindNotes,67,2.0,70
+SolarBag,80,3.5,86
+HydroPen,74,1.9,75
+ZenLamp,83,2.4,89</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Instrucciones (paso a paso)</h2>
+      <ol>
+        <li><b>Crea tu proyecto Java</b> (clase <code>Main</code>) en JDoodle o tu IDE.</li>
+        <li>
+          <b>Lee el archivo</b>:
+          <ul>
+            <li>Con archivo: <code>Scanner in = new Scanner(new File("productos.txt"));</code></li>
+            <li>Con STDIN (JDoodle): <code>Scanner in = new Scanner(System.in);</code> y pega el contenido en el panel de stdin.</li>
+          </ul>
+        </li>
+        <li class="note">
+          <b>Divide cada línea con <code>split</code></b><br>
+          <em>Explicación clave:</em> <code>split(String linea)</code> divide una cadena de caracteres (o sea, un String) en
+          <b>segmentos</b> usando un separador.<br>
+          Ejemplo:
+          <pre><code>String linea = "EcoBottle,78,2.5,85";
+String[] partes = linea.split(","); // ["EcoBottle", "78", "2.5", "85"]</code></pre>
+          Convierte <code>partes[1]</code>, <code>partes[2]</code> y <code>partes[3]</code> a <code>double</code>.
+        </li>
+        <li><b>Guarda los datos en arreglos</b> (sin colecciones):
+          <pre><code>String[] nombre = new String[MAX];
+double[] interes = new double[MAX];
+double[] costo = new double[MAX];
+double[] positivos = new double[MAX];
+double[] indice = new double[MAX];
+int n = 0; // cantidad leída</code></pre>
+        </li>
+        <li><b>Calcula el índice de éxito</b> por producto:
+          <pre><code>indice[i] = (0.5 * interes[i]) + (0.4 * positivos[i]) - (10 * costo[i]);</code></pre>
+        </li>
+        <li><b>Encuentra los dos mejores productos</b> (top 1 y top 2) comparando valores en <code>indice</code>
+            con bucles y variables <code>max1</code>/<code>max2</code> (no uses sort ni colecciones).</li>
+        <li><b>Imprime un informe tabular</b>:
+          <pre><code>Producto        Interés  Positivos  Costo  Índice
+--------------------------------------------------
+...
+--------------------------------------------------
+1° lugar: &lt;ProductoTop1&gt;
+2° lugar: &lt;ProductoTop2&gt;</code></pre>
+          Sugerencia: usa <code>System.out.printf</code> para alinear columnas.
+        </li>
+        <li><b>Promedio general con recursión</b> (sin loops en este método):
+          <pre><code>static double promedioRec(double[] a, int i, int n) {
+    if (i == n - 1) return a[i];           // caso base
+    double resto = promedioRec(a, i + 1, n); // recursión
+    return (a[i] + resto * (n - i - 1)) / (n - i);
+}</code></pre>
+          En <code>main</code>: <code>double promedio = promedioRec(indice, 0, n);</code>
+        </li>
+        <li class="note"><b>Muestra el TOKEN de verificación</b> (sirve como “huella” de tus cálculos):
+          <pre><code>int token = (int)(promedio + indice[max1] + indice[max2]);
+System.out.println("TOKEN=" + token);</code></pre>
+          Si cambian datos o hay errores de cálculo, el <code>TOKEN</code> también cambia.
+        </li>
+        <li><b>Entrega</b>:
+          <ul>
+            <li>Envía la URL pública de JDoodle con tu programa que imprime la tabla, top 2, promedio y <code>TOKEN</code>.</li>
+            <li>Incluye al inicio del código:
+              <pre><code>// Nombre: ...
+// TOKEN=...</code></pre>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Formato esperado (ejemplo)</h2>
+      <table>
+        <thead>
+          <tr><th>Producto</th><th>Interés</th><th>Positivos</th><th>Costo</th><th>Índice</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EcoBottle</td><td>78</td><td>85</td><td>2.50</td><td>70.50</td></tr>
+          <tr><td>SmartBrush</td><td>65</td><td>72</td><td>1.80</td><td>60.20</td></tr>
+          <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="5">1° lugar: &lt;ProductoTop1&gt; · 2° lugar: &lt;ProductoTop2&gt;</td></tr>
+        </tfoot>
+      </table>
+      <p class="foot">Promedio general de éxito: <code>&lt;##.##&gt;</code> · <b>TOKEN=###</b></p>
+    </section>
+
+    <section class="card warn">
+      <h2>Restricciones</h2>
+      <ul>
+        <li>Usa <b>arreglos</b> y <b>bucles</b> (<code>for</code>, <code>while</code>). Sin <code>ArrayList</code>, <code>Streams</code> ni ordenamientos automáticos.</li>
+        <li>Maneja líneas vacías con <code>trim()</code> y <code>continue</code>.</li>
+        <li>Formatea columnas con <code>printf</code> (ej: <code>%-15s</code>, <code>%-8.2f</code>).</li>
+      </ul>
+    </section>
+
+    <p class="foot">© Laboratorio académico — Algoritmos y Programación (Java)</p>
+  </div>
+</body>
+</html>
